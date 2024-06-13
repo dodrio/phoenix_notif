@@ -61,15 +61,14 @@ function doAnimations(delayTime, maxItems, elToRemove) {
       }
     })
     .filter(Boolean)
-    // reverse
     .reverse()
 
   if (elToRemove) {
     toasts = toasts.filter((t) => t !== elToRemove)
   }
 
-  // Traverse through all toasts, in order they appear in the dom, for which they are NOT hidden, and assign el.order to
-  // their index
+  // Traverse through all toasts, in order they appear in the dom, for which they
+  // are NOT hidden, and assign el.order to their index.
   for (let i = 0; i < toasts.length; i++) {
     const toast = toasts[i]
     if (isHidden(toast)) {
@@ -92,7 +91,7 @@ function doAnimations(delayTime, maxItems, elToRemove) {
       direction = "-"
     }
 
-    // Calculate the translateY value with gap
+    // Calculate the translateY value with gap.
     // now that they can be different heights, we need to actually caluclate the real heights and add them up.
     let val = 0
 
@@ -172,8 +171,6 @@ async function animateOut() {
   await animation.finished
 }
 
-// Create the Phoenix Hoook for live_toast.
-// You can set custom animation durations.
 export function createLiveToastHook(duration = 6000, maxItems = 3) {
   return {
     destroyed() {
@@ -213,9 +210,7 @@ export function createLiveToastHook(duration = 6000, maxItems = 3) {
       }
 
       window.setTimeout(async () => {
-        // animate this element sliding down, opacity to 0, with delay time
         await animateOut.bind(this)()
-
         this.pushEventTo("#toast-group", "clear", { id: this.el.id })
       }, durationOverride + removalTime)
     },
