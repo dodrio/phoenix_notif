@@ -6,7 +6,7 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 
-// js/live_toast/index.ts
+// js/live_toast/index.js
 __export(exports, {
   createLiveToastHook: () => createLiveToastHook
 });
@@ -751,7 +751,7 @@ function animate2(target, keyframesOrOptions, options) {
   return factory(target, keyframesOrOptions, options);
 }
 
-// js/live_toast/live_toast.ts
+// js/live_toast/live_toast.js
 function isHidden(el) {
   if (el === null) {
     return true;

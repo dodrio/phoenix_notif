@@ -27,7 +27,7 @@ var LiveMotion = (() => {
     });
   };
 
-  // js/live_toast/index.ts
+  // js/live_toast/index.js
   var live_toast_exports = {};
   __export(live_toast_exports, {
     createLiveToastHook: () => createLiveToastHook
@@ -773,7 +773,7 @@ var LiveMotion = (() => {
     return factory(target, keyframesOrOptions, options);
   }
 
-  // js/live_toast/live_toast.ts
+  // js/live_toast/live_toast.js
   function isHidden(el) {
     if (el === null) {
       return true;

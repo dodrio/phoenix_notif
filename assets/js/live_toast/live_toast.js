@@ -1,7 +1,6 @@
-import type { ViewHook } from 'phoenix_live_view'
-import { animate } from 'motion'
+import { animate } from "motion"
 
-function isHidden(el: HTMLElement | null) {
+function isHidden(el) {
   if (el === null) {
     return true
   }
@@ -9,12 +8,8 @@ function isHidden(el: HTMLElement | null) {
   return el.offsetParent === null
 }
 
-function isFlash(el: HTMLElement) {
-  if (
-    ['server-error', 'client-error', 'flash-info', 'flash-error'].includes(
-      el.id,
-    )
-  ) {
+function isFlash(el) {
+  if (["server-error", "client-error", "flash-info", "flash-error"].includes(el.id)) {
     return true
   } else {
     return false
@@ -25,19 +20,19 @@ function isFlash(el: HTMLElement) {
 function flashCount() {
   let num = 0
 
-  if (!isHidden(document.getElementById('server-error'))) {
+  if (!isHidden(document.getElementById("server-error"))) {
     num += 1
   }
 
-  if (!isHidden(document.getElementById('client-error'))) {
+  if (!isHidden(document.getElementById("client-error"))) {
     num += 1
   }
 
-  if (!isHidden(document.getElementById('flash-info'))) {
+  if (!isHidden(document.getElementById("flash-info"))) {
     num += 1
   }
 
-  if (!isHidden(document.getElementById('flash-error'))) {
+  if (!isHidden(document.getElementById("flash-error"))) {
     num += 1
   }
 
@@ -53,27 +48,11 @@ const maxItemsIgnoresFlashes = true
 // gap in px between toasts
 const gap = 15
 
-let lastTS: any[] = []
+let lastTS = []
 
-declare global {
-  interface HTMLElement {
-    order: number
-    targetDestination: string
-  }
-}
-
-function doAnimations(
-  this: ViewHook,
-  delayTime: number,
-  maxItems: number,
-  elToRemove?: HTMLElement,
-) {
+function doAnimations(delayTime, maxItems, elToRemove) {
   const ts = []
-  let toasts = Array.from(
-    document.querySelectorAll<HTMLElement>(
-      '#toast-group [phx-hook="LiveToast"]',
-    ),
-  )
+  let toasts = Array.from(document.querySelectorAll('#toast-group [phx-hook="LiveToast"]'))
     .map((t) => {
       if (isHidden(t)) {
         return null
@@ -92,7 +71,7 @@ function doAnimations(
   // Traverse through all toasts, in order they appear in the dom, for which they are NOT hidden, and assign el.order to
   // their index
   for (let i = 0; i < toasts.length; i++) {
-    const toast = toasts[i]!
+    const toast = toasts[i]
     if (isHidden(toast)) {
       continue
     }
@@ -107,13 +86,10 @@ function doAnimations(
 
     const toast = ts[i]
 
-    let direction = ''
+    let direction = ""
 
-    if (
-      toast.dataset.corner === 'bottom_left' ||
-      toast.dataset.corner === 'bottom_right'
-    ) {
-      direction = '-'
+    if (toast.dataset.corner === "bottom_left" || toast.dataset.corner === "bottom_right") {
+      direction = "-"
     }
 
     // Calculate the translateY value with gap
@@ -129,9 +105,9 @@ function doAnimations(
 
     // also if this item moved past the max limit, disable click events on it
     if (toast.order >= max) {
-      toast.classList.remove('pointer-events-auto')
+      toast.classList.remove("pointer-events-auto")
     } else {
-      toast.classList.add('pointer-events-auto')
+      toast.classList.add("pointer-events-auto")
     }
 
     let keyframes = { y: [`${direction}${val}px`], opacity: [opacity] }
@@ -139,7 +115,7 @@ function doAnimations(
     // if element is entering for the first time, start below the fold
     if (toast.order === 0 && lastTS.includes(toast) === false) {
       const val = toast.offsetHeight + gap
-      const oppositeDirection = direction === '-' ? '' : '-'
+      const oppositeDirection = direction === "-" ? "" : "-"
       keyframes.y.unshift(`${oppositeDirection}${val}px`)
 
       keyframes.opacity.unshift(0)
@@ -163,7 +139,7 @@ function doAnimations(
     // also what about elements moving down when you close one?
     window.setTimeout(() => {
       if (toast.order > max) {
-        this.pushEventTo('#toast-group', 'clear', { id: toast.id })
+        this.pushEventTo("#toast-group", "clear", { id: toast.id })
       }
     }, delayTime + removalTime)
 
@@ -171,16 +147,13 @@ function doAnimations(
   }
 }
 
-async function animateOut(this: ViewHook) {
+async function animateOut() {
   const val = (this.el.order - 2) * 100 + (this.el.order - 2) * gap
 
-  let direction = ''
+  let direction = ""
 
-  if (
-    this.el.dataset.corner === 'bottom_left' ||
-    this.el.dataset.corner === 'bottom_right'
-  ) {
-    direction = '-'
+  if (this.el.dataset.corner === "bottom_left" || this.el.dataset.corner === "bottom_right") {
+    direction = "-"
   }
 
   const animation = animate(
@@ -189,10 +162,10 @@ async function animateOut(this: ViewHook) {
     {
       opacity: {
         duration: 0.2,
-        easing: 'ease-out',
+        easing: "ease-out",
       },
       duration: 0.3,
-      easing: 'ease-out',
+      easing: "ease-out",
     },
   )
 
@@ -203,23 +176,23 @@ async function animateOut(this: ViewHook) {
 // You can set custom animation durations.
 export function createLiveToastHook(duration = 6000, maxItems = 3) {
   return {
-    destroyed(this: ViewHook) {
+    destroyed() {
       doAnimations.bind(this)(duration, maxItems)
     },
-    updated(this: ViewHook) {
+    updated() {
       // animate to targetDestination in 0ms
       let keyframes = { y: [this.el.targetDestination] }
       animate(this.el, keyframes, { duration: 0 })
     },
-    mounted(this: ViewHook) {
+    mounted() {
       // for the special flashes, check if they are visible, and if not, return early out of here.
-      if (['server-error', 'client-error'].includes(this.el.id)) {
+      if (["server-error", "client-error"].includes(this.el.id)) {
         if (isHidden(document.getElementById(this.el.id))) {
           return
         }
       }
 
-      window.addEventListener('flash-leave', async (event) => {
+      window.addEventListener("flash-leave", async (event) => {
         if (event.target === this.el) {
           // animate this flash sliding out
           doAnimations.bind(this, duration, maxItems, this.el)()
@@ -243,7 +216,7 @@ export function createLiveToastHook(duration = 6000, maxItems = 3) {
         // animate this element sliding down, opacity to 0, with delay time
         await animateOut.bind(this)()
 
-        this.pushEventTo('#toast-group', 'clear', { id: this.el.id })
+        this.pushEventTo("#toast-group", "clear", { id: this.el.id })
       }, durationOverride + removalTime)
     },
   }
