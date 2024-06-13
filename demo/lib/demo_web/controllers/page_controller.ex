@@ -1,7 +1,7 @@
 defmodule DemoWeb.PageController do
   use DemoWeb, :controller
 
-  def home(conn, params) do
+  def demo(conn, params) do
     conn =
       case params["flash"] do
         nil ->
@@ -16,6 +16,6 @@ defmodule DemoWeb.PageController do
           |> put_flash(:error, "This is an error flash.")
       end
 
-    render(conn, :home)
+    render(conn)
   end
 end
