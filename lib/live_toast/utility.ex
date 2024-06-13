@@ -49,10 +49,11 @@ defmodule LiveToast.Utility do
   def show(js \\ %JS{}, selector) do
     JS.show(js,
       to: selector,
-      display: "flex",
+      time: 300,
       transition:
         {"transition-all transform ease-out duration-300", "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95",
-         "opacity-100 translate-y-0 sm:scale-100"}
+         "opacity-100 translate-y-0 sm:scale-100"},
+      display: "flex"
     )
   end
 
