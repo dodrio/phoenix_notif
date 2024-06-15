@@ -22,10 +22,10 @@ defmodule PhoenixNotif do
 
     class =
       case assigns.layout do
-        :bottom_left -> "bottom-0 left-0 #{default_classes} sm:top-auto"
-        :bottom_right -> "bottom-0 right-0 #{default_classes} sm:top-auto"
-        :top_left -> "top-0 left-0 #{default_classes} sm:bottom-auto"
-        :top_right -> "top-0 right-0 #{default_classes} sm:bottom-auto"
+        :bottom_left -> "bottom-0 left-0 #{default_classes} sm:top-auto items-end"
+        :bottom_right -> "bottom-0 right-0 #{default_classes} sm:top-auto items-end"
+        :top_left -> "top-0 left-0 #{default_classes} sm:bottom-auto items-start"
+        :top_right -> "top-0 right-0 #{default_classes} sm:bottom-auto items-start"
       end
 
     assigns = assign(assigns, :class, class)
