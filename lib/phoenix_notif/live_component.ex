@@ -6,7 +6,6 @@ defmodule PhoenixNotif.LiveComponent do
   alias Phoenix.LiveView
   alias PhoenixNotif.Base
   alias PhoenixNotif.Flash
-  alias PhoenixNotif.System
   alias PhoenixNotif.Toast
 
   @doc """
@@ -96,7 +95,6 @@ defmodule PhoenixNotif.LiveComponent do
         component={component}
       />
       <Flash.flashes group_id={@id} f={@f} live={true} />
-      <System.status group_id={@id} />
     </div>
     """
   end

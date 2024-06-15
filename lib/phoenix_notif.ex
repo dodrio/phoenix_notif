@@ -36,7 +36,6 @@ defmodule PhoenixNotif do
     <% else %>
       <div id={@id} class={@class} data-layout={@layout}>
         <Flash.flashes group_id={@id} f={@flash} live={false} />
-        <System.status group_id={@id} />
       </div>
     <% end %>
     """

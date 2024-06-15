@@ -7,7 +7,7 @@ defmodule PhoenixNotif.Base do
 
   alias Phoenix.LiveView.JS
 
-  @types [:system, :flash, :"lv-flash", :"lv-toast"]
+  @types [:flash, :"lv-flash", :"lv-toast"]
   @kinds [:info, :success, :warning, :error]
 
   @doc false
@@ -83,8 +83,11 @@ defmodule PhoenixNotif.Base do
       <button
         type="button"
         class={[
-          "group-has-[[data-part='title']]/notification:absolute right-[5px] top-[5px]",
-          "rounded-md p-[5px] text-black/50 transition-opacity hover:text-black focus:opacity-100 focus:outline-none focus:ring-1 group group-hover:opacity-100"
+          "group group-has-[[data-part='title']]/notification:absolute right-1.5 top-1.5",
+          "p-1",
+          "rounded-md text-black/50 transition-all",
+          "hover:text-black hover:bg-black/5 group-hover:opacity-100",
+          "focus:opacity-100 focus:outline-none focus:ring-2"
         ]}
         aria-label="close"
         phx-click={JS.dispatch("notification-dismiss", to: "##{@id}")}
@@ -99,12 +102,12 @@ defmodule PhoenixNotif.Base do
   def notification_class_fn(assigns) do
     [
       # base classes
-      "relative w-full p-4 pointer-events-auto  origin-center",
+      "relative",
+      "flex items-center justify-between",
+      "w-full p-4 pointer-events-auto origin-center",
       "border rounded-lg shadow-lg overflow-hidden",
       # start hidden if javascript is enabled
       "[@media(scripting:enabled)]:opacity-0 [@media(scripting:enabled){[data-phx-main]_&}]:opacity-100",
-      # used to hide the disconnected flashes
-      if(assigns[:rest][:hidden] == true, do: "hidden", else: "flex items-center justify-between"),
       # override styles per severity
       assigns[:kind] == :info && "bg-white text-black",
       assigns[:kind] == :error && "!text-red-700 !bg-red-100 border-red-200"

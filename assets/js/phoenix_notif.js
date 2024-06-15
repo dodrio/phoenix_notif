@@ -105,10 +105,6 @@ export default function createPhoenixNotifHook(animateOptions) {
         await animateOut(groupId, this.el)
 
         switch (type) {
-          case "system":
-            this.el.remove()
-            break
-
           case "flash":
             this.el.remove()
             break
