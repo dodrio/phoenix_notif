@@ -110,6 +110,8 @@ defmodule PhoenixNotif.Base do
       "[@media(scripting:enabled)]:opacity-0 [@media(scripting:enabled){[data-phx-main]_&}]:opacity-100",
       # override styles per severity
       assigns[:kind] == :info && "bg-white text-black",
+      assigns[:kind] == :success && "!text-green-700 !bg-green-100 border-green-200",
+      assigns[:kind] == :warning && "!text-yellow-700 !bg-yellow-100 border-yellow-200",
       assigns[:kind] == :error && "!text-red-700 !bg-red-100 border-red-200"
     ]
   end
