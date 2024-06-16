@@ -1,6 +1,6 @@
 defmodule PhoenixNotif do
   @moduledoc """
-
+  A drop-in replacement for notification system in Phoenix.
   """
 
   use Phoenix.Component
@@ -11,6 +11,13 @@ defmodule PhoenixNotif do
 
   defdelegate connection_group(assigns), to: System
 
+  @doc """
+  Renders a notification group for DeadView and LiveView.
+
+    * For DeadView, it only renders flashes.
+    * For LiveView, it renders flashes and toasts.
+
+  """
   attr :id, :string, default: "notification-group", doc: "the DOM id of notification group"
 
   attr :position, :atom,
@@ -21,7 +28,6 @@ defmodule PhoenixNotif do
   attr :flash, :map, required: true, doc: "the map of flash messages"
   attr :connected, :boolean, default: false
 
-  @doc false
   def notification_group(assigns) do
     default_classes = "fixed z-50 max-h-screen w-full md:max-w-[420px] p-4 grid pointer-events-none"
 
@@ -47,4 +53,5 @@ defmodule PhoenixNotif do
   end
 
   defdelegate send_toast(kind, message, options \\ []), to: LiveComponent
+  defdelegate put_toast(socket, kind, message, options \\ []), to: LiveComponent
 end

@@ -1,10 +1,17 @@
 defmodule PhoenixNotif.Flash do
-  @moduledoc false
+  @moduledoc """
+  The flash system for DeadView and LiveView.
+  """
 
   use Phoenix.Component
 
   alias PhoenixNotif.Base
 
+  @doc """
+  Flashes are derived from `PhoenixNotif.Base`.
+
+  They won't disappear util you dismiss them.
+  """
   attr :group_id, :string, required: true
   attr :f, :map, required: true
   attr :live, :boolean, default: false

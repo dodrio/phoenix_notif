@@ -1,10 +1,15 @@
 defmodule PhoenixNotif.System do
-  @moduledoc false
+  @moduledoc """
+  The notification system for system information, such as connection status.
+  """
 
   use Phoenix.Component
 
   alias Phoenix.LiveView.JS
 
+  @doc """
+  Renders a connection group for showing connection status.
+  """
   attr :id, :string, default: "connection-group", doc: "the DOM id of connection group"
   attr :position, :atom, default: :bottom, values: [:top, :bottom], doc: "the position for showing UI"
   attr :client_error_message, :string, default: "Network error, attempting to reconnect..."

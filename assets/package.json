@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "test": "true"
+  },
   "type": "module",
   "devDependencies": {
     "phoenix_live_view": "file:../deps/phoenix_live_view"

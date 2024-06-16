@@ -11,7 +11,7 @@ Add `:phoenix_notif` to the list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:phoenix_notif, <requirement>}
+    {:phoenix_notif, "~> <version>"}
   ]
 end
 ```
@@ -70,7 +70,7 @@ It's most likely in the `app.html.heex`:
 - Flash
 - Toast - allows multiple notifications to show for each kind of toast.
 
-## Using Flash
+### Using Flash
 
 > It's supported by DeadView and LiveView.
 
@@ -83,7 +83,7 @@ push_flash(conn, :info, "Upload successful.")
 push_flash(socket, :info, "Upload successful.")
 ```
 
-## Using Toast
+### Using Toast
 
 > It's supported by LiveView only.
 

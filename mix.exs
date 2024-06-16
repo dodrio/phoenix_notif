@@ -37,7 +37,7 @@ defmodule PhoenixNotif.MixProject do
       {:esbuild, "~> 0.2", only: :dev},
       {:bandit, "~> 1.1", only: :dev},
       {:styler, "~> 0.11.9", only: [:dev, :test], runtime: false},
-      {:ex_check, "~> 0.14.0", only: [:dev], runtime: false},
+      {:ex_check, "~> 0.16", only: [:dev], runtime: false},
       {:credo, ">= 0.0.0", only: [:dev], runtime: false},
       {:dialyxir, ">= 0.0.0", only: [:dev], runtime: false},
       {:ex_doc, "~> 0.34", only: [:dev], runtime: false},

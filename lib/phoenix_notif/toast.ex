@@ -5,11 +5,11 @@ defmodule PhoenixNotif.Toast do
   defstruct [
     :uuid,
     :kind,
-    :message,
-    :title,
+    :duration,
     :icon,
+    :title,
+    :message,
     :action,
-    :component,
-    :duration
+    :component
   ]
 end

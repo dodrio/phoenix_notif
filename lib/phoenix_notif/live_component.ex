@@ -1,5 +1,7 @@
 defmodule PhoenixNotif.LiveComponent do
-  @moduledoc false
+  @moduledoc """
+  The notification system for LiveView.
+  """
 
   use Phoenix.LiveComponent
 
@@ -7,6 +9,19 @@ defmodule PhoenixNotif.LiveComponent do
   alias PhoenixNotif.Base
   alias PhoenixNotif.Flash
   alias PhoenixNotif.Toast
+
+  @typedoc "`Phoenix.Component` that renders a part of the toast message."
+  @type component_fn() :: (map() -> Phoenix.LiveView.Rendered.t())
+
+  @typedoc "Set of public options to augment the default toast behavior."
+  @type option() ::
+          {:uuid, Ecto.UUID.t()}
+          | {:duration, non_neg_integer()}
+          | {:icon, component_fn()}
+          | {:title, binary()}
+          | {:action, component_fn()}
+          | {:component, component_fn()}
+          | {:group_id, binary()}
 
   @doc """
   Send a new toast message to the PhoenixNotif component.
@@ -20,23 +35,44 @@ defmodule PhoenixNotif.LiveComponent do
       "00c90156-56d1-4bca-a9e2-6353d49c974a"
 
   """
+  @spec send_toast(Base.kind(), binary(), [option()]) :: Ecto.UUID.t()
   def send_toast(kind, message, options \\ []) do
     uuid = options[:uuid] || Ecto.UUID.generate()
+    group_id = options[:group_id] || "notification-group"
 
     toast = %Toast{
       uuid: uuid,
       kind: kind,
-      message: message,
-      title: options[:title],
-      icon: options[:icon],
-      action: options[:action],
       duration: options[:duration],
+      icon: options[:icon],
+      title: options[:title],
+      message: message,
+      action: options[:action],
       component: options[:component]
     }
 
-    LiveView.send_update(__MODULE__, id: "notification-group", toasts: [toast])
+    LiveView.send_update(__MODULE__, id: group_id, toasts: [toast])
 
     uuid
+  end
+
+  @doc """
+  Helper function around `send_toast/3` that is useful in pipelines.
+
+  Unlike `send_toast/3`, this function does not expose the UUID of the
+  new toast, so if you need to update the toast after showing it, you
+  should use `send_toast/3` directly.
+
+  ## Examples
+
+      iex> put_toast(socket, :info, "Thank you for logging in!")
+      %LiveView.Socket{...}
+
+  """
+  @spec put_toast(LiveView.Socket.t(), Base.kind(), binary(), [option()]) :: LiveView.Socket.t()
+  def put_toast(%LiveView.Socket{} = socket, kind, message, options \\ []) do
+    send_toast(kind, message, options)
+    socket
   end
 
   @impl Phoenix.LiveComponent
