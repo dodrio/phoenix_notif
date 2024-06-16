@@ -1,22 +1,6 @@
 <div class="grow p-3 md:p-6 mx-auto max-screen-4xl">
-  <LiveToast.toast_group
-    flash={@flash}
-    connected={assigns[:socket] != nil}
-    {
-      if assigns[:settings] do
-        [
-          corner: case assigns[:settings]["corner"] do
-              "top_right" -> :top_right
-              "top_left" -> :top_left
-              "bottom_right" -> :bottom_right
-              "bottom_left" -> :bottom_left
-          end
-        ]
-      else
-        []
-      end
-    }
-  />
+  <PhoenixNotif.connection_group position={:bottom} />
+  <PhoenixNotif.notification_group flash={@flash} connected={assigns[:socket] != nil} />
 
   <%= @inner_content %>
 </div>

@@ -1,15 +1,27 @@
 var __defProp = Object.defineProperty;
-var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
-  __markAsModule(target);
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
 };
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// js/live_toast/index.js
-__export(exports, {
-  createLiveToastHook: () => createLiveToastHook
+// phoenix_notif/index.js
+var phoenix_notif_exports = {};
+__export(phoenix_notif_exports, {
+  default: () => createPhoenixNotifHook
 });
+module.exports = __toCommonJS(phoenix_notif_exports);
 
 // node_modules/@motionone/utils/dist/array.es.js
 function addUniqueItem(array, item) {
@@ -322,12 +334,12 @@ var MotionValue = class {
 };
 
 // node_modules/@motionone/dom/dist/animate/data.es.js
-var data = new WeakMap();
+var data = /* @__PURE__ */ new WeakMap();
 function getAnimationData(element) {
   if (!data.has(element)) {
     data.set(element, {
       transforms: [],
-      values: new Map()
+      values: /* @__PURE__ */ new Map()
     });
   }
   return data.get(element);
@@ -366,7 +378,7 @@ var baseTransformProperties = {
   },
   skew: rotation
 };
-var transformDefinitions = new Map();
+var transformDefinitions = /* @__PURE__ */ new Map();
 var asTransformCssVar = (name) => `--motion-${name}`;
 var transforms = ["x", "y", "z"];
 order.forEach((name) => {
@@ -390,7 +402,7 @@ var transformListToString = (template, name) => `${template} ${name}(var(${asTra
 
 // node_modules/@motionone/dom/dist/animate/utils/css-var.es.js
 var isCssVar = (name) => name.startsWith("--");
-var registeredProperties = new Set();
+var registeredProperties = /* @__PURE__ */ new Set();
 function registerCssVariable(name) {
   if (registeredProperties.has(name))
     return;
@@ -635,7 +647,14 @@ function animateStyle(element, key, keyframesDefinition, options = {}, Animation
 }
 
 // node_modules/@motionone/dom/dist/animate/utils/options.es.js
-var getOptions = (options, key) => options[key] ? Object.assign(Object.assign({}, options), options[key]) : Object.assign({}, options);
+var getOptions = (options, key) => (
+  /**
+   * TODO: Make test for this
+   * Always return a new object otherwise delay is overwritten by results of stagger
+   * and this results in no stagger
+   */
+  options[key] ? Object.assign(Object.assign({}, options), options[key]) : Object.assign({}, options)
+);
 
 // node_modules/@motionone/dom/dist/utils/resolve-elements.es.js
 function resolveElements(elements, selectorCache) {
@@ -728,7 +747,20 @@ function createAnimate(AnimatePolyfill) {
         animationFactories.push(animation);
       }
     }
-    return withControls(animationFactories, options, options.duration);
+    return withControls(
+      animationFactories,
+      options,
+      /**
+       * TODO:
+       * If easing is set to spring or glide, duration will be dynamically
+       * generated. Ideally we would dynamically generate this from
+       * animation.effect.getComputedTiming().duration but this isn't
+       * supported in iOS13 or our number polyfill. Perhaps it's possible
+       * to Proxy animations returned from animateStyle that has duration
+       * as a getter.
+       */
+      options.duration
+    );
   };
 }
 
@@ -751,151 +783,123 @@ function animate2(target, keyframesOrOptions, options) {
   return factory(target, keyframesOrOptions, options);
 }
 
-// js/live_toast/live_toast.js
+// phoenix_notif/index.js
 function isHidden(el) {
   if (el === null) {
     return true;
   }
   return el.offsetParent === null;
 }
-function isFlash(el) {
-  if (["server-error", "client-error", "flash-info", "flash-error"].includes(el.id)) {
-    return true;
-  } else {
-    return false;
-  }
-}
-function flashCount() {
-  let num = 0;
-  if (!isHidden(document.getElementById("server-error"))) {
-    num += 1;
-  }
-  if (!isHidden(document.getElementById("client-error"))) {
-    num += 1;
-  }
-  if (!isHidden(document.getElementById("flash-info"))) {
-    num += 1;
-  }
-  if (!isHidden(document.getElementById("flash-error"))) {
-    num += 1;
-  }
-  return num;
-}
-var removalTime = 5;
-var animationTime = 550;
-var maxItemsIgnoresFlashes = true;
-var gap = 15;
-var lastTS = [];
-function doAnimations(delayTime, maxItems, elToRemove) {
-  const ts = [];
-  let toasts = Array.from(document.querySelectorAll('#toast-group [phx-hook="LiveToast"]')).map((t) => {
-    if (isHidden(t)) {
-      return null;
+function doAnimations(notificationGroupId, notificationToRemove, {
+  gapBetweenNotifications = 15,
+  maxShownNotifications = 3
+} = {}) {
+  const notificationGroup = document.querySelector(`#${notificationGroupId}`);
+  const notifications = Array.from(
+    notificationGroup.querySelectorAll(`[phx-hook="PhoenixNotif"]`)
+  ).filter((n) => !isHidden(n)).filter((n) => n !== notificationToRemove).reverse().map((notification, index) => {
+    notification.new = notification.order == void 0;
+    notification.order = index;
+    return notification;
+  });
+  for (let notification of notifications) {
+    if (notification.order >= maxShownNotifications) {
+      notification.classList.remove("pointer-events-auto");
     } else {
-      return t;
+      notification.classList.add("pointer-events-auto");
     }
-  }).filter(Boolean).reverse();
-  if (elToRemove) {
-    toasts = toasts.filter((t) => t !== elToRemove);
-  }
-  for (let i = 0; i < toasts.length; i++) {
-    const toast = toasts[i];
-    if (isHidden(toast)) {
-      continue;
+    notification.style.zIndex = `${50 - 1 - notification.order}`;
+    const direction = notificationGroup.dataset.position.startsWith("bottom_") ? "-" : "";
+    let y = 0;
+    for (let i = 0; i < notification.order; i++) {
+      y += notifications[i].offsetHeight + gapBetweenNotifications;
     }
-    toast.order = i;
-    ts[i] = toast;
-  }
-  for (let i = 0; i < ts.length; i++) {
-    const max = maxItemsIgnoresFlashes ? maxItems + flashCount() : maxItems;
-    const toast = ts[i];
-    let direction = "";
-    if (toast.dataset.corner === "bottom_left" || toast.dataset.corner === "bottom_right") {
-      direction = "-";
-    }
-    let val = 0;
-    for (let j = 0; j < toast.order; j++) {
-      val += ts[j].offsetHeight + gap;
-    }
-    const opacity = toast.order > max ? 0 : 1 - (toast.order - max + 1);
-    if (toast.order >= max) {
-      toast.classList.remove("pointer-events-auto");
-    } else {
-      toast.classList.add("pointer-events-auto");
-    }
-    let keyframes = { y: [`${direction}${val}px`], opacity: [opacity] };
-    if (toast.order === 0 && lastTS.includes(toast) === false) {
-      const val2 = toast.offsetHeight + gap;
+    notification.targetY = `${direction}${y}px`;
+    const opacity = notification.order >= maxShownNotifications ? 0 : 1;
+    const keyframes = { y: [`${direction}${y}px`], opacity: [opacity] };
+    if (notification.new) {
+      const y2 = notification.offsetHeight + gapBetweenNotifications;
       const oppositeDirection = direction === "-" ? "" : "-";
-      keyframes.y.unshift(`${oppositeDirection}${val2}px`);
+      keyframes.y.unshift(`${oppositeDirection}${y2}px`);
       keyframes.opacity.unshift(0);
     }
-    toast.targetDestination = `${direction}${val}px`;
-    const duration = animationTime / 1e3;
-    animate2(toast, keyframes, {
-      duration,
+    animate2(notification, keyframes, {
+      duration: 0.55,
       easing: [0.22, 1, 0.36, 1]
     });
-    toast.order += 1;
-    toast.style.zIndex = (50 - toast.order).toString();
-    window.setTimeout(() => {
-      if (toast.order > max) {
-        this.pushEventTo("#toast-group", "clear", { id: toast.id });
-      }
-    }, delayTime + removalTime);
-    lastTS = ts;
   }
 }
-async function animateOut() {
-  const val = (this.el.order - 2) * 100 + (this.el.order - 2) * gap;
-  let direction = "";
-  if (this.el.dataset.corner === "bottom_left" || this.el.dataset.corner === "bottom_right") {
-    direction = "-";
-  }
-  const animation = animate2(this.el, { y: `${direction}${val}%`, opacity: 0 }, {
-    opacity: {
-      duration: 0.2,
-      easing: "ease-out"
-    },
-    duration: 0.3,
-    easing: "ease-out"
-  });
+async function animateOut(notificationGroupId, notification) {
+  const notificationGroup = document.querySelector(`#${notificationGroupId}`);
+  const direction = notificationGroup.dataset.position.startsWith("bottom_") ? "" : "-";
+  const y = notification.order * notification.offsetHeight;
+  const animation = animate2(
+    notification,
+    { y: `${direction}${y}px`, opacity: 0 },
+    {
+      y: {
+        duration: 0.5,
+        easing: "ease-out"
+      },
+      opacity: {
+        duration: 0.3,
+        easing: "ease-out"
+      }
+    }
+  );
   await animation.finished;
 }
-function createLiveToastHook(duration = 6e3, maxItems = 3) {
+function createPhoenixNotifHook(animateOptions) {
   return {
-    destroyed() {
-      doAnimations.bind(this)(duration, maxItems);
-    },
-    updated() {
-      let keyframes = { y: [this.el.targetDestination] };
-      animate2(this.el, keyframes, { duration: 0 });
-    },
     mounted() {
-      if (["server-error", "client-error"].includes(this.el.id)) {
-        if (isHidden(document.getElementById(this.el.id))) {
-          return;
-        }
-      }
-      window.addEventListener("flash-leave", async (event) => {
-        if (event.target === this.el) {
-          doAnimations.bind(this, duration, maxItems, this.el)();
-          await animateOut.bind(this)();
+      const type = this.type();
+      const groupId = this.groupId();
+      const duration = this.duration();
+      this.el.addEventListener("notification-dismiss", async (event) => {
+        event.stopPropagation();
+        doAnimations(groupId, this.el, animateOptions);
+        await animateOut(groupId, this.el);
+        switch (type) {
+          case "flash":
+            this.el.remove();
+            break;
+          case "lv-flash":
+            this.el.remove();
+            const kind = this.kind();
+            this.pushEvent("lv:clear-flash", { key: kind });
+            break;
+          case "lv-toast":
+            this.el.remove();
+            this.pushEventTo(`#${this.groupId()}`, "clear-toast", { id: this.el.id });
+            break;
+          default:
+            throw `unknown notification type - ${type}`;
         }
       });
-      doAnimations.bind(this)(duration, maxItems);
-      if (isFlash(this.el)) {
-        return;
+      doAnimations(groupId, null, animateOptions);
+      if (duration > 0) {
+        window.setTimeout(() => {
+          const event = new Event("notification-dismiss");
+          this.el.dispatchEvent(event);
+        }, duration);
       }
-      let durationOverride = duration;
-      if (this.el.dataset.duration !== void 0) {
-        durationOverride = parseInt(this.el.dataset.duration);
-      }
-      window.setTimeout(async () => {
-        await animateOut.bind(this)();
-        this.pushEventTo("#toast-group", "clear", { id: this.el.id });
-      }, durationOverride + removalTime);
+    },
+    updated() {
+      const keyframes = { y: [this.el.targetY] };
+      animate2(this.el, keyframes, { duration: 0 });
+    },
+    type() {
+      return this.el.dataset.type;
+    },
+    kind() {
+      return this.el.dataset.kind;
+    },
+    groupId() {
+      return this.el.dataset.groupId;
+    },
+    duration() {
+      return Number.parseInt(this.el.dataset.duration);
     }
   };
 }
-//# sourceMappingURL=live_toast.cjs.js.map
+//# sourceMappingURL=phoenix_notif.cjs.js.map

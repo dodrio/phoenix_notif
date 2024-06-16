@@ -29,7 +29,7 @@ defmodule DemoWeb.HomeLiveTest do
     end
   end
 
-  describe "LiveToast.send_toast/7" do
+  describe "PhoenixNotif.send_toast/7" do
     test "renders correctly", %{conn: conn} do
       {:ok, view, html} = live(conn, ~p"/")
 

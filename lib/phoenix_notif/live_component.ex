@@ -9,7 +9,7 @@ defmodule PhoenixNotif.LiveComponent do
   alias PhoenixNotif.Toast
 
   @doc """
-  Send a new toast message to the LiveToast component.
+  Send a new toast message to the PhoenixNotif component.
 
   Returns the UUID of the new toast message. This UUID can be passed back
   to another call to `send_toast/3` to update the properties of an existing toast.

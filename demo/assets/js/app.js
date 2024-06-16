@@ -1,13 +1,15 @@
 import "phoenix_html"
 import { Socket } from "phoenix"
 import { LiveSocket } from "phoenix_live_view"
-import { createLiveToastHook } from "../../../assets/js/live_toast/live_toast.js"
+import createPhoenixNotifHook from "../../../assets/phoenix_notif"
 
-let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {
+const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+const liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: { _csrf_token: csrfToken },
-  hooks: { LiveToast: createLiveToastHook() },
+  hooks: {
+    PhoenixNotif: createPhoenixNotifHook({ maxShownNotifications: 3 }),
+  },
 })
 
 // connect if there are any LiveViews on the page

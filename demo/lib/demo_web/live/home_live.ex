@@ -44,7 +44,7 @@ defmodule DemoWeb.HomeLive do
 
     uuid = "this-is-a-uuid"
 
-    LiveToast.send_toast(
+    PhoenixNotif.send_toast(
       :info,
       body,
       title: nil,
@@ -62,7 +62,7 @@ defmodule DemoWeb.HomeLive do
   def handle_event("show_progress", _payload, socket) do
     uuid = "show-progress"
 
-    LiveToast.send_toast(
+    PhoenixNotif.send_toast(
       :info,
       "Uploading...",
       title: "Show Progress",
@@ -111,7 +111,7 @@ defmodule DemoWeb.HomeLive do
         _ -> nil
       end
 
-    LiveToast.send_toast(
+    PhoenixNotif.send_toast(
       case kind do
         "info" -> :info
         "error" -> :error
@@ -150,7 +150,7 @@ defmodule DemoWeb.HomeLive do
   def handle_info(:progress, socket) do
     uuid = "show-progress"
 
-    LiveToast.send_toast(
+    PhoenixNotif.send_toast(
       :info,
       "Still going, please wait a little longer...",
       title: "Show Progress",
@@ -170,7 +170,7 @@ defmodule DemoWeb.HomeLive do
   def handle_info(:done, socket) do
     uuid = "show-progress"
 
-    LiveToast.send_toast(
+    PhoenixNotif.send_toast(
       :info,
       "Upload complete!",
       title: "Show Progress",
@@ -253,7 +253,7 @@ defmodule DemoWeb.HomeLive do
 
       <p class="w-full mt-2 text-xs font-medium text-gray-500 flex">
         <span class="grow text-indigo-600">
-          <.link href="https://github.com/srcrip/live_toast">
+          <.link href="https://github.com/srcrip/phoenix_notif">
             Star it on GitHub
           </.link>
         </span>
@@ -333,7 +333,7 @@ defmodule DemoWeb.HomeLive do
         </a>
         <div class="grow"></div>
         <a
-          href="https://github.com/srcrip/live_toast"
+          href="https://github.com/srcrip/phoenix_notif"
           target="_blank"
           rel="noreferrer"
           class="p-2 text-current"

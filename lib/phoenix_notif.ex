@@ -1,5 +1,8 @@
 defmodule PhoenixNotif do
-  @moduledoc false
+  @moduledoc """
+
+  """
+
   use Phoenix.Component
 
   alias PhoenixNotif.Flash

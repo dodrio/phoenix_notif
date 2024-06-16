@@ -1,7 +1,7 @@
 import Config
 
 config :demo, DemoWeb.Endpoint,
-  reloadable_apps: [:live_toast, :demo],
+  reloadable_apps: [:phoenix_notif, :demo],
   http: [ip: {127, 0, 0, 1}, port: 4004],
   check_origin: false,
   code_reloader: true,
