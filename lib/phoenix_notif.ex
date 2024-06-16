@@ -7,7 +7,6 @@ defmodule PhoenixNotif do
   alias PhoenixNotif.System
 
   attr :id, :string, default: "notification-group", doc: "the DOM id of notification group"
-  # TODO: change default value to :bottom_right
   attr :layout, :atom,
     values: [:top_left, :top_right, :bottom_left, :bottom_right],
     default: :bottom_right,
