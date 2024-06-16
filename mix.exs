@@ -37,6 +37,7 @@ defmodule LiveToast.MixProject do
       {:ecto, ">= 3.11.0"},
       {:esbuild, "~> 0.2", only: :dev},
       {:bandit, "~> 1.1", only: :dev},
+      {:styler, "~> 0.11.9", only: [:dev, :test], runtime: false},
       {:ex_check, "~> 0.14.0", only: [:dev], runtime: false},
       {:credo, ">= 0.0.0", only: [:dev], runtime: false},
       {:dialyxir, ">= 0.0.0", only: [:dev], runtime: false},
