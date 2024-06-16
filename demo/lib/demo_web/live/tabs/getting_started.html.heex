@@ -1,0 +1,170 @@
+<h2 class="mb-6 text-2xl font-bold">Getting Started</h2>
+
+<h2 class="text-lg font-semibold mb-3">What is PhoenixNotif?</h2>
+
+<p>
+  <.link
+    class="text-blue-700 hover:text-blue-500 underline"
+    href="https://hexdocs.pm/phoenix/controllers.html#flash-messages"
+  >
+    The existing flash system
+  </.link>
+  in Phoenix has a few limitations:
+</p>
+
+<ol class="list-disc list-inside ml-4">
+  <li class="mt-3">
+    You can't show multiple flash messages of the same type at the same time.
+  </li>
+  <li class="mt-3">...</li>
+</ol>
+
+<p class="mt-4">
+  To eliminate these limitations, PhoenixNotif attempts to provide more solutions. To avoid confusion with existing terms like Flash, PhoenixNotif uses a more generic term - notification.
+</p>
+
+<p class="mt-4">
+  It has two main features:
+</p>
+
+<ol class="mb-8 list-disc list-inside ml-4">
+  <li class="mt-3">
+    It improves the preferances of flash system. (To make it have the same UI with the toast system)
+  </li>
+  <li class="mt-3">
+    It provides a toast system for LiveView.
+  </li>
+</ol>
+
+<h2 class="mb-6 text-2xl font-bold">Showcases</h2>
+
+<p class="mt-4">
+  Here's a sneak peak of what PhoenixNotif provides.
+</p>
+
+<div class="mt-6 mb-12">
+  <h2 class="text-lg font-semibold mb-3">Flashes</h2>
+  <p class="mt-2 mb-4">
+    PhoenixNotif renders flashes, just like before.
+  </p>
+  <div class="flex flex-wrap gap-3">
+    <.button phx-click="flash" phx-value-kind="info">
+      Info Flash
+    </.button>
+
+    <.button phx-click="flash" phx-value-kind="success">
+      Success Flash
+    </.button>
+
+    <.button phx-click="flash" phx-value-kind="warning">
+      Warning Flash
+    </.button>
+
+    <.button phx-click="flash" phx-value-kind="error">
+      Error Flash
+    </.button>
+  </div>
+</div>
+
+<div class="mt-6 mb-12">
+  <h2 class="text-lg font-semibold mb-3">Toasts</h2>
+  <p class="mt-2 mb-4">
+    PhoenixNotif render a toast with the default styles via <code class="text-rose-600 bg-zinc-50 rounded px-1">send_toast/3</code>.
+  </p>
+  <div class="flex flex-wrap gap-3">
+    <.button phx-click="toast" phx-value-kind="info">
+      Info Toast
+    </.button>
+
+    <.button phx-click="toast" phx-value-kind="success">
+      Success Toast
+    </.button>
+
+    <.button phx-click="toast" phx-value-kind="warning">
+      Warning Toast
+    </.button>
+
+    <.button phx-click="toast" phx-value-kind="error">
+      Error Toast
+    </.button>
+  </div>
+</div>
+
+<div class="mb-12">
+  <h3 class="text-lg font-semibold mb-3">Update existing toasts</h3>
+  <p class="mt-2 mb-4">
+    If you want to update an existing toast, you can call
+    <code class="text-rose-600 bg-zinc-50 rounded px-1">send_toast</code>
+    with the same UUID multiple times.
+  </p>
+  <div class="flex flex-wrap gap-3">
+    <.button phx-click="update_toast" phx-value-kind="info">
+      Update an existing Toast
+    </.button>
+  </div>
+</div>
+
+<div class="mb-12">
+  <h2 class="text-lg font-semibold mb-3">Titles</h2>
+  <p class="mt-2 mb-4">
+    You may pass an optional <code class="text-rose-600 bg-zinc-50 rounded px-1">:title</code>
+    string to <code class="text-rose-600 bg-zinc-50 rounded px-1">send_toast</code>.
+  </p>
+  <div class="flex flex-wrap gap-3">
+    <.button phx-click={
+      JS.push("toast",
+        value: %{
+          "kind" => "info",
+          "title" => "Toast with title",
+          "body" => "This is a toast with a title."
+        }
+      )
+    }>
+      With Title
+    </.button>
+
+    <.button phx-click={
+      JS.push("toast", value: %{"kind" => "info", "body" => "No title on this one."})
+    }>
+      Without Title
+    </.button>
+  </div>
+</div>
+
+<div class="mb-12">
+  <h2 class="text-lg font-semibold mb-3">Kitchen Sink</h2>
+  <p class="mt-2 mb-4">
+    If you need total customization, you may pass a
+    <code class="text-rose-600 bg-zinc-50 rounded px-1">:component</code>
+    function to <code class="text-rose-600 bg-zinc-50 rounded px-1">send_toast</code>. It is expected to be a function component, which takes assigns and returns heex.
+  </p>
+
+  <p class="mt-2 mb-4">
+    It will totally take over rendering for that call, so that you can render totally custom toasts. It receives all the assigns of the built in toast function. See the default implementation in GitHub for an example.
+  </p>
+  <div class="flex flex-wrap gap-3">
+    <.button phx-click={
+      JS.push("toast",
+        value: %{
+          "title" => "Custom component",
+          "body" => "This is rendered using a custom toast.",
+          "component" => "custom"
+        }
+      )
+    }>
+      Custom Component
+    </.button>
+
+    <.button phx-click={
+      JS.push("toast",
+        value: %{
+          "title" => "Event Created",
+          "body" => "Please contact your administrator for more details.",
+          "component" => "everything"
+        }
+      )
+    }>
+      All The Things
+    </.button>
+  </div>
+</div>

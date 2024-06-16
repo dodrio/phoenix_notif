@@ -8,16 +8,9 @@ defmodule DemoWeb.HomeLive do
 
   embed_templates("tabs/*")
 
-  @default_settings %{
-    "corner" => "bottom_right",
-    "icon" => nil,
-    "action" => nil
-  }
-
   def handle_params(_params, _uri, socket) do
     socket =
       socket
-      |> assign(:settings, @default_settings)
       |> apply_action(socket.assigns.live_action)
       |> push_event("close-menu", %{})
 
@@ -26,9 +19,54 @@ defmodule DemoWeb.HomeLive do
     {:noreply, socket}
   end
 
-  def handle_event("change_settings", payload, socket) do
+  def handle_event("flash", %{"kind" => kind}, socket) do
     socket =
-      assign(socket, :settings, Map.merge(socket.assigns.settings, payload))
+      put_flash(
+        socket,
+        case kind do
+          "info" -> :info
+          "success" -> :success
+          "warning" -> :warning
+          "error" -> :error
+        end,
+        "This is a flash."
+      )
+
+    {:noreply, socket}
+  end
+
+  def handle_event("toast", payload, socket) do
+    kind = Map.get(payload, "kind", "info")
+    title = Map.get(payload, "title")
+    body = Map.get(payload, "body", "This is a toast.")
+
+    component =
+      case Map.get(payload, "component") do
+        "custom" -> &custom_toast/1
+        "congrats" -> &congrats_toast/1
+        "everything" -> &everything_toast/1
+        _ -> nil
+      end
+
+    duration =
+      case Map.get(payload, "duration", nil) do
+        d when is_integer(d) -> d
+        d when is_binary(d) -> String.to_integer(d)
+        _ -> nil
+      end
+
+    PhoenixNotif.send_toast(
+      case kind do
+        "info" -> :info
+        "success" -> :success
+        "warning" -> :warning
+        "error" -> :error
+      end,
+      body,
+      title: title,
+      component: component,
+      duration: duration
+    )
 
     {:noreply, socket}
   end
@@ -47,12 +85,6 @@ defmodule DemoWeb.HomeLive do
     PhoenixNotif.send_toast(
       :info,
       body,
-      title: nil,
-      icon: nil,
-      action: nil,
-      duration: nil,
-      component: nil,
-      container_id: "toast-group",
       uuid: uuid
     )
 
@@ -92,18 +124,6 @@ defmodule DemoWeb.HomeLive do
         _ -> nil
       end
 
-    icon =
-      case Map.get(socket.assigns.settings, "icon") do
-        "example" -> &example_icon/1
-        nil -> nil
-      end
-
-    action =
-      case Map.get(socket.assigns.settings, "action") do
-        "example" -> &example_action/1
-        nil -> nil
-      end
-
     duration =
       case Map.get(payload, "duration", nil) do
         d when is_integer(d) -> d
@@ -118,26 +138,10 @@ defmodule DemoWeb.HomeLive do
       end,
       body,
       title: title,
-      icon: icon,
-      action: action,
       duration: duration,
       component: component,
       container_id: "toast-group"
     )
-
-    {:noreply, socket}
-  end
-
-  def handle_event("flash", %{"kind" => kind}, socket) do
-    socket =
-      put_flash(
-        socket,
-        case kind do
-          "info" -> :info
-          "error" -> :error
-        end,
-        "This is a flash message."
-      )
 
     {:noreply, socket}
   end
@@ -377,14 +381,9 @@ defmodule DemoWeb.HomeLive do
     """
   end
 
-  def tab(%{action: :why} = assigns), do: why(assigns)
   def tab(%{action: :recipes} = assigns), do: recipes(assigns)
   def tab(%{action: :customization} = assigns), do: customization(assigns)
-  def tab(assigns), do: demo(assigns)
-
-  def apply_action(socket, :why) do
-    assign(socket, :page_title, "PhoenixNotif — Why PhoenixNotif?")
-  end
+  def tab(assigns), do: getting_started(assigns)
 
   def apply_action(socket, :recipes) do
     assign(socket, :page_title, "PhoenixNotif — Recipes")

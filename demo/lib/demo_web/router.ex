@@ -14,7 +14,6 @@ defmodule DemoWeb.Router do
     pipe_through(:browser)
 
     live("/", HomeLive)
-    live("/why", HomeLive, :why)
     live("/installation", HomeLive, :installation)
     live("/recipes", HomeLive, :recipes)
     live("/customization", HomeLive, :customization)
