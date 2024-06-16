@@ -1,5 +1,7 @@
 # PhoenixNotif
 
+[![Hex.pm](https://img.shields.io/hexpm/v/phoenix_notif.svg)](https://hex.pm/packages/phoenix_notif)
+
 A drop-in replacement for notification system in Phoenix.
 
 ## Installation
