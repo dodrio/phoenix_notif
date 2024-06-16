@@ -10,7 +10,7 @@ defmodule PhoenixNotif do
 
   attr :id, :string, default: "notification-group", doc: "the DOM id of notification group"
 
-  attr :layout, :atom,
+  attr :position, :atom,
     values: [:top_left, :top_right, :bottom_left, :bottom_right],
     default: :bottom_right,
     doc: "the location for showing notifications"
@@ -23,7 +23,7 @@ defmodule PhoenixNotif do
     default_classes = "fixed z-50 max-h-screen w-full md:max-w-[420px] p-4 grid pointer-events-none"
 
     class =
-      case assigns.layout do
+      case assigns.position do
         :bottom_left -> "bottom-0 left-0 #{default_classes} sm:top-auto items-end"
         :bottom_right -> "bottom-0 right-0 #{default_classes} sm:top-auto items-end"
         :top_left -> "top-0 left-0 #{default_classes} sm:bottom-auto items-start"
@@ -34,9 +34,9 @@ defmodule PhoenixNotif do
 
     ~H"""
     <%= if @connected do %>
-      <.live_component id={@id} module={LiveComponent} class={@class} layout={@layout} f={@flash} />
+      <.live_component id={@id} module={LiveComponent} class={@class} position={@position} f={@flash} />
     <% else %>
-      <div id={@id} class={@class} data-layout={@layout}>
+      <div id={@id} class={@class} data-position={@position}>
         <Flash.flashes group_id={@id} f={@flash} live={false} />
       </div>
     <% end %>

@@ -6,7 +6,7 @@ defmodule PhoenixNotif.System do
   alias Phoenix.LiveView.JS
 
   attr :id, :string, default: "connection-group", doc: "the DOM id of connection group"
-  attr :position, :atom, default: :top, values: [:top, :bottom], doc: "the position for showing UI"
+  attr :position, :atom, default: :bottom, values: [:top, :bottom], doc: "the position for showing UI"
   attr :client_error_message, :string, default: "Network error, attempting to reconnect..."
   attr :server_error_message, :string, default: "Service error, attempting to recover..."
 

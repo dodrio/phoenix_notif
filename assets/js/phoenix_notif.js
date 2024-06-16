@@ -41,7 +41,7 @@ function doAnimations(
     notification.style.zIndex = `${50 - 1 - notification.order}`
 
     // calculate axis y of the element
-    const direction = notificationGroup.dataset.layout.startsWith("bottom_") ? "-" : ""
+    const direction = notificationGroup.dataset.position.startsWith("bottom_") ? "-" : ""
     let y = 0
     for (let i = 0; i < notification.order; i++) {
       y += notifications[i].offsetHeight + gapBetweenNotifications
@@ -70,7 +70,7 @@ function doAnimations(
 async function animateOut(notificationGroupId, notification) {
   const notificationGroup = document.querySelector(`#${notificationGroupId}`)
 
-  const direction = notificationGroup.dataset.layout.startsWith("bottom_") ? "" : "-"
+  const direction = notificationGroup.dataset.position.startsWith("bottom_") ? "" : "-"
   const y = notification.order * notification.offsetHeight
 
   const animation = animate(

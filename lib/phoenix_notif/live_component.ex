@@ -69,7 +69,7 @@ defmodule PhoenixNotif.LiveComponent do
   @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
-    <div id={@id} class={@class} data-layout={@layout} phx-update="stream">
+    <div id={@id} class={@class} data-position={@position} phx-update="stream">
       <Base.notification
         :for={
           {dom_id,
