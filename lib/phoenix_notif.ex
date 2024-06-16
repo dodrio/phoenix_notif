@@ -6,7 +6,10 @@ defmodule PhoenixNotif do
   alias PhoenixNotif.LiveComponent
   alias PhoenixNotif.System
 
+  defdelegate connection_group(assigns), to: System
+
   attr :id, :string, default: "notification-group", doc: "the DOM id of notification group"
+
   attr :layout, :atom,
     values: [:top_left, :top_right, :bottom_left, :bottom_right],
     default: :bottom_right,
@@ -40,5 +43,5 @@ defmodule PhoenixNotif do
     """
   end
 
-  defdelegate send_toast(kind, message, options \\ []), to: PhoenixNotif.LiveComponent
+  defdelegate send_toast(kind, message, options \\ []), to: LiveComponent
 end

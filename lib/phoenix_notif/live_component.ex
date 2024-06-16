@@ -100,7 +100,7 @@ defmodule PhoenixNotif.LiveComponent do
   end
 
   @impl Phoenix.LiveComponent
-  def handle_event("clear-toast", %{"id" => "lv-toast-" <> uuid} = payload, socket) do
+  def handle_event("clear-toast", %{"id" => "lv-toast-" <> _uuid} = payload, socket) do
     socket =
       socket
       |> stream_delete_by_dom_id(:toasts, payload["id"])
