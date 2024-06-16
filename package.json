@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/srcrip/phoenix_notif.git"
+    "url": "git://github.com/cozy-elixir/phoenix_notif.git"
   },
   "files": [
     "README.md",

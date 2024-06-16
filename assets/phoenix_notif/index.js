@@ -46,12 +46,13 @@ function doAnimations(
     for (let i = 0; i < notification.order; i++) {
       y += notifications[i].offsetHeight + gapBetweenNotifications
     }
-    notification.targetY = `${direction}${y}px`
+    const targetY = `${direction}${y}`
+    notification.targetY = targetY
 
     // calculate opacity of the element
     const opacity = notification.order >= maxShownNotifications ? 0 : 1
 
-    const keyframes = { y: [`${direction}${y}px`], opacity: [opacity] }
+    const keyframes = { y: [`${targetY}px`], opacity: [opacity] }
     if (notification.new) {
       // if element is entering for the first time, give it extra keyframes
       const y = notification.offsetHeight + gapBetweenNotifications
@@ -70,19 +71,25 @@ function doAnimations(
 async function animateOut(notificationGroupId, notification) {
   const notificationGroup = document.querySelector(`#${notificationGroupId}`)
 
-  const direction = notificationGroup.dataset.position.startsWith("bottom_") ? "" : "-"
-  const y = notification.order * notification.offsetHeight
+  const direction = notificationGroup.dataset.position.startsWith("bottom_") ? "-" : ""
+
+  const y =
+    notification.order > 0
+      ? Math.abs(Math.abs(notification.targetY) - notification.offsetHeight)
+      : 0
+
+  console.log(y)
 
   const animation = animate(
     notification,
     { y: `${direction}${y}px`, opacity: 0 },
     {
       y: {
-        duration: 0.5,
+        duration: 0.3,
         easing: "ease-out",
       },
       opacity: {
-        duration: 0.3,
+        duration: 0.2,
         easing: "ease-out",
       },
     },
@@ -137,7 +144,7 @@ export default function createPhoenixNotifHook(animateOptions) {
 
     updated() {
       // place the element to its destination immediately when something is updated.
-      const keyframes = { y: [this.el.targetY] }
+      const keyframes = { y: [`${this.el.targetY}px`] }
       animate(this.el, keyframes, { duration: 0 })
     },
 
