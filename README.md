@@ -114,6 +114,12 @@ defmodule DemoWeb.HomeLive do
 end
 ```
 
+## TODO
+
+- [ ] Tune the components by following:
+  - https://primer.style/components/flash
+  - https://primer.style/components/toast
+
 ## License
 
 MIT
