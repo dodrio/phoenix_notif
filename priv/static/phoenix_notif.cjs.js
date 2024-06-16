@@ -814,9 +814,10 @@ function doAnimations(notificationGroupId, notificationToRemove, {
     for (let i = 0; i < notification.order; i++) {
       y += notifications[i].offsetHeight + gapBetweenNotifications;
     }
-    notification.targetY = `${direction}${y}px`;
+    const targetY = `${direction}${y}`;
+    notification.targetY = targetY;
     const opacity = notification.order >= maxShownNotifications ? 0 : 1;
-    const keyframes = { y: [`${direction}${y}px`], opacity: [opacity] };
+    const keyframes = { y: [`${targetY}px`], opacity: [opacity] };
     if (notification.new) {
       const y2 = notification.offsetHeight + gapBetweenNotifications;
       const oppositeDirection = direction === "-" ? "" : "-";
@@ -831,18 +832,19 @@ function doAnimations(notificationGroupId, notificationToRemove, {
 }
 async function animateOut(notificationGroupId, notification) {
   const notificationGroup = document.querySelector(`#${notificationGroupId}`);
-  const direction = notificationGroup.dataset.position.startsWith("bottom_") ? "" : "-";
-  const y = notification.order * notification.offsetHeight;
+  const direction = notificationGroup.dataset.position.startsWith("bottom_") ? "-" : "";
+  const y = notification.order > 0 ? Math.abs(Math.abs(notification.targetY) - notification.offsetHeight) : 0;
+  console.log(y);
   const animation = animate2(
     notification,
     { y: `${direction}${y}px`, opacity: 0 },
     {
       y: {
-        duration: 0.5,
+        duration: 0.3,
         easing: "ease-out"
       },
       opacity: {
-        duration: 0.3,
+        duration: 0.2,
         easing: "ease-out"
       }
     }
@@ -885,7 +887,7 @@ function createPhoenixNotifHook(animateOptions) {
       }
     },
     updated() {
-      const keyframes = { y: [this.el.targetY] };
+      const keyframes = { y: [`${this.el.targetY}px`] };
       animate2(this.el, keyframes, { duration: 0 });
     },
     type() {

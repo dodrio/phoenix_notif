@@ -59,7 +59,7 @@ defmodule PhoenixNotif.MixProject do
       licenses: ["MIT"],
       links: %{GitHub: @source_url},
       files: ~w"""
-      assets/js/
+      assets/phoenix_notif/
       priv/
       lib/
       mix.exs
