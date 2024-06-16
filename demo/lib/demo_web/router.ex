@@ -19,6 +19,6 @@ defmodule DemoWeb.Router do
     live("/recipes", HomeLive, :recipes)
     live("/customization", HomeLive, :customization)
 
-    get("/demo", PageController, :demo)
+    get("/dead_view/demo", PageController, :demo)
   end
 end

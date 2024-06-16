@@ -9,7 +9,7 @@ defmodule DemoWeb.HomeLiveTest do
     test "renders correctly", %{conn: conn} do
       {:ok, _view, html} = live(conn, ~p"/")
 
-      assert html =~ "Live Toast"
+      assert html =~ "PhoenixNotif"
       assert html =~ "A beautiful drop-in replacement for the Phoenix Flash system."
     end
 

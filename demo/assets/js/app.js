@@ -8,7 +8,7 @@ const liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: { _csrf_token: csrfToken },
   hooks: {
-    PhoenixNotif: createPhoenixNotifHook({ maxShownNotifications: 3 }),
+    PhoenixNotif: createPhoenixNotifHook({ maxShownNotifications: 5 }),
   },
 })
 

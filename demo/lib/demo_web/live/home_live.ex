@@ -253,7 +253,7 @@ defmodule DemoWeb.HomeLive do
 
       <p class="w-full mt-2 text-xs font-medium text-gray-500 flex">
         <span class="grow text-indigo-600">
-          <.link href="https://github.com/srcrip/phoenix_notif">
+          <.link href="https://github.com/cozy-elixir/phoenix_notif">
             Star it on GitHub
           </.link>
         </span>
@@ -329,11 +329,11 @@ defmodule DemoWeb.HomeLive do
       </div>
       <nav class="mx-auto flex h-[50px] max-w-[90rem] items-center justify-end gap-2 pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]">
         <a class="flex items-center hover:opacity-75 font-semibold" href="/">
-          Live Toast
+          PhoenixNotif
         </a>
         <div class="grow"></div>
         <a
-          href="https://github.com/srcrip/phoenix_notif"
+          href="https://github.com/cozy-elixir/phoenix_notif"
           target="_blank"
           rel="noreferrer"
           class="p-2 text-current"
@@ -383,18 +383,18 @@ defmodule DemoWeb.HomeLive do
   def tab(assigns), do: demo(assigns)
 
   def apply_action(socket, :why) do
-    assign(socket, :page_title, "Live Toast — Why Live Toast?")
+    assign(socket, :page_title, "PhoenixNotif — Why PhoenixNotif?")
   end
 
   def apply_action(socket, :recipes) do
-    assign(socket, :page_title, "Live Toast — Recipes")
+    assign(socket, :page_title, "PhoenixNotif — Recipes")
   end
 
   def apply_action(socket, :customization) do
-    assign(socket, :page_title, "Live Toast — Customization")
+    assign(socket, :page_title, "PhoenixNotif — Customization")
   end
 
   def apply_action(socket, _) do
-    assign(socket, :page_title, "Live Toast — Getting Started")
+    assign(socket, :page_title, "PhoenixNotif — Getting Started")
   end
 end

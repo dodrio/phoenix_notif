@@ -7,12 +7,23 @@ defmodule DemoWeb.PageController do
         nil ->
           conn
 
-        ["info"] ->
+        "info" ->
           put_flash(conn, :info, "This is an info flash.")
 
-        ["info", "error"] ->
+        "success" ->
+          put_flash(conn, :success, "This is a success flash.")
+
+        "warning" ->
+          put_flash(conn, :warning, "This is a warning flash.")
+
+        "error" ->
+          put_flash(conn, :error, "This is an error flash.")
+
+        "all" ->
           conn
           |> put_flash(:info, "This is an info flash.")
+          |> put_flash(:success, "This is a success flash.")
+          |> put_flash(:warning, "This is a warning flash.")
           |> put_flash(:error, "This is an error flash.")
       end
 
