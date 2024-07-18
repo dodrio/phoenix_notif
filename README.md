@@ -1,3 +1,5 @@
+> Deprecated. And all the functionalities have been moved to <https://github.com/cozy-elixir/shino>.
+
 # PhoenixNotif
 
 [![Hex.pm](https://img.shields.io/hexpm/v/phoenix_notif.svg)](https://hex.pm/packages/phoenix_notif)
